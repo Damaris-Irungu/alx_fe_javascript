@@ -1,3 +1,20 @@
+const apiUrl = 'https://jsonplaceholder.typicode.com/posts'; // Example API for quotes
+
+// Function to fetch quotes from the server periodically
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(apiUrl);
+    const serverQuotes = await response.json();
+    console.log('Fetched quotes from server:', serverQuotes);
+    syncServerQuotes(serverQuotes);
+  } catch (error) {
+    console.error('Error fetching quotes from server:', error);
+  }
+}
+
+// Simulate fetching quotes from server every 30 seconds
+setInterval(fetchQuotesFromServer, 30000);
+
 // Array of quote objects with text and category
 let quotes = [
   { text: "Text.", category: "Category" },
@@ -120,6 +137,27 @@ function saveQuotes() {
     categoryFilter.appendChild(option);
   }
 
+// Sync server quotes with local storage
+function syncServerQuotes(serverQuotes) {
+  const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
+  // Merge server and local quotes, with server taking precedence
+  const updatedQuotes = [...serverQuotes];
+
+  localQuotes.forEach(localQuote => {
+    const existingQuote = updatedQuotes.find(quote => quote.id === localQuote.id);
+    if (!existingQuote) {
+      updatedQuotes.push(localQuote);
+    }
+  });
+
+  // Save merged quotes to local storage
+  localStorage.setItem('quotes', JSON.stringify(updatedQuotes));
+  console.log('Synced quotes:', updatedQuotes);
+
+  // Update the UI
+  showRandomQuote();
+}
 // Load quotes from localStorage on page load
 document.addEventListener('DOMContentLoaded', function () {
 // Initialize quotes array from localStorage
@@ -165,4 +203,24 @@ function importFromJsonFile(event) {
     alert('Quotes imported successfully!');
   };
   fileReader.readAsText(event.target.files[0]);
+}
+// Conflict resolution: Notify users if quotes have been updated
+function notifyUserOfUpdate() {
+  const notificationDiv = document.createElement('div');
+  notificationDiv.textContent = 'Quotes have been updated from the server!';
+  notificationDiv.classList.add('notification');
+  document.body.appendChild(notificationDiv);
+
+  setTimeout(() => {
+    notificationDiv.remove();
+  }, 5000);
+}
+
+// Manual conflict resolution option (prompt)
+function manualConflictResolution() {
+  const userChoice = confirm('Server data conflicts with local data. Do you want to use server data?');
+  if (userChoice) {
+    localStorage.setItem('quotes', JSON.stringify(serverQuotes));
+    showRandomQuote();
+  }
 }
