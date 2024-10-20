@@ -234,7 +234,7 @@ function importFromJsonFile(event) {
 // Conflict resolution: Notify users if quotes have been updated
 function notifyUserOfUpdate() {
   const notificationDiv = document.createElement('div');
-  notificationDiv.textContent = 'Quotes have been updated from the server!';
+  notificationDiv.textContent = 'Quotes synced with server!';
   notificationDiv.classList.add('notification');
   document.body.appendChild(notificationDiv);
 
