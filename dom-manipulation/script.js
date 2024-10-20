@@ -5,6 +5,21 @@ let quotes = [
   { text: "Text.", category: "Category" },
   { text: "Text.", category: "Category" },
 ];
+// Function to populate categories in the dropdown menu
+function populateCategories() {
+  const categoryFilter = document.getElementById('categoryFilter');
+  const uniqueCategories = [...new Set(quotes.map(q => q.category))];
+  uniqueCategories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+// Function to filter and display quotes based on selected category
+function filterQuotes() {
+  const categoryFilter = document.getElementById('categoryFilter').value;
+  const filteredQuotes = (categoryFilter === 'all') ? quotes : quotes.filter(q => q.category === categoryFilter);
+
 
 // Function to display a random quote using innerHTML
 function showRandomQuote() {
@@ -96,11 +111,22 @@ function addQuote() {
 function saveQuotes() {
   localStorage.setItem('quotes', JSON.stringify(quotes));
 }
+// Update categories in the dropdown
+  const categoryFilter = document.getElementById('categoryFilter');
+  if (![...categoryFilter.options].some(opt => opt.value === newQuoteCategory)) {
+    const option = document.createElement('option');
+    option.value = newQuoteCategory;
+    option.textContent = newQuoteCategory;
+    categoryFilter.appendChild(option);
+  }
 
 // Load quotes from localStorage on page load
 document.addEventListener('DOMContentLoaded', function () {
 // Initialize quotes array from localStorage
   let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
+// Restore the last selected filter from localStorage
+  const savedCategory = localStorage.getItem('selectedCategory') || 'all';
+  categoryFilter.value = savedCategory;
   // Show the last viewed quote from sessionStorage, if any
   const lastViewedQuote = JSON.parse(sessionStorage.getItem('lastViewedQuote'));
   if (lastViewedQuote) {
