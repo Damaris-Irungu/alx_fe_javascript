@@ -99,6 +99,8 @@ function saveQuotes() {
 
 // Load quotes from localStorage on page load
 document.addEventListener('DOMContentLoaded', function () {
+// Initialize quotes array from localStorage
+  let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
   // Show the last viewed quote from sessionStorage, if any
   const lastViewedQuote = JSON.parse(sessionStorage.getItem('lastViewedQuote'));
   if (lastViewedQuote) {
