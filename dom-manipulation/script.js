@@ -15,6 +15,33 @@ async function fetchQuotesFromServer() {
 // Simulate fetching quotes from server every 30 seconds
 setInterval(fetchQuotesFromServer, 30000);
 
+// Function to post data to the mock API
+function postQuote() {
+  fetch('https://jsonplaceholder.typicode.com/posts', {
+    method: 'POST', // Specify the method
+    headers: {
+      'Content-Type': 'application/json' // Set the content type to JSON
+    },
+    body: JSON.stringify(newQuote) // Convert the quote object to JSON
+  })
+  .then(response => {
+    // Check if the request was successful
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json(); // Parse the response as JSON
+  })
+  .then(data => {
+    console.log('Success:', data); // Handle the response data
+  })
+  .catch(error => {
+    console.error('Error:', error); // Handle any errors
+  });
+}
+
+// Call the function to post the quote
+postQuote();
+
 // Array of quote objects with text and category
 let quotes = [
   { text: "Text.", category: "Category" },
