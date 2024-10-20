@@ -165,7 +165,7 @@ function saveQuotes() {
   }
 
 // Sync server quotes with local storage
-function syncServerQuotes(serverQuotes) {
+function syncQuotes(serverQuotes) {
   const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
 
   // Merge server and local quotes, with server taking precedence
